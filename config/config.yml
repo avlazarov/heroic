@@ -1,0 +1,15 @@
+development:
+  inventory_capacity: 20
+  experience_per_level: 1000
+  experience_percent_lost: 10
+
+production:
+  inventory_capacity: 20
+  experience_per_level: 1000
+  experience_percent_lost: 10
+
+test:
+  inventory_capacity: 5
+  experience_per_level: 1000
+  experience_percent_lost: 10
+

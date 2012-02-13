@@ -1,0 +1,16 @@
+<div id='menu'>
+  <% if logged_in? %>
+    <ul>
+      <li><%= link_to 'Home',             player_path %></li>
+      <li><%= link_to 'Battle',           battle_player_path %></li>
+      <li><%= link_to 'Resurrect Player', resurrect_player_path %></li>
+      <li><%= link_to 'Inventory',        inventory_path %></li>
+      <li><%= link_to 'Player Settings',  edit_player_path %></li>
+      <li><%= link_to 'Account Settings', edit_account_path %></li>
+      <li><%= link_to 'Delete Account',   account_path, confirm: 'Are you sure, Steve?', method: :delete %></li>
+      <li><%= link_to('Logout', logout_account_path) if logged_in? %></li>
+    </ul>
+  <% else %>
+    &nbsp;
+  <% end %>
+</div>

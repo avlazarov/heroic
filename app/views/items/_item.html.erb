@@ -1,0 +1,23 @@
+<strong><%= item.name %></strong>
+<table class='item-display-table'>
+  <tr>
+    <td>Attack</td>
+    <td><%= item.attack %></td>
+  </tr>
+  <tr>
+    <td>Defese</td>
+    <td><%= item.defense %></td>
+  </tr>
+  <tr>
+    <td>Life</td>
+    <td><%= item.life %></td>
+  </tr>
+  <tr>
+    <td>Experience bonus</td>
+    <td><%= item.experience_bonus %></td>
+  </tr>
+  <tr>
+    <td><%= link_to 'Remove', inventory_item_path(item), confirm: 'Are you sure?', method: :delete %><br/></td>
+    <td></td>
+  </tr>
+</table>

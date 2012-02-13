@@ -1,0 +1,59 @@
+<h1>New account</h1>
+<%= notice %>
+<%= form_for @account, :url => {:action => :create} do |f| %>
+  <% if @account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@account.errors.count, "error") %> prohibited this account from being saved:</h2>
+
+      <ul>
+      <% @account.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <% if @player.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@player.errors.count, "error") %> prohibited this player from being saved:</h2>
+
+      <ul>
+      <% @player.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div class="field">
+    <%= f.label :username %>*<br />
+    <%= f.text_field :username %>(at least 2 chars long, at most 20)
+  </div>
+  <div class="field">
+    <%= f.label :password %>*<br />
+    <%= f.password_field :password %>(at least 6 chars long, at most 30)
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %>*<br />
+    <%= f.password_field :password_confirmation %>
+  </div>
+  
+  <%= fields_for @player do |p|%>
+    <div class="field">
+      <%= p.label :name, "Player name" %>*<br />
+      <%= p.text_field :name %>
+    </div>
+    <div class="field">
+      <%= p.label :player_class_id %>*<br />
+      <%= collection_select(:player, :player_class_id, PlayerClass.all, :id, :name, :prompt => true) %>
+      <%= link_to 'View class bonuses', player_classes_path, :target => '_blank' %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<%= render 'shared/required_notice' %>
+
+<%= link_to 'Back to Login', login_account_path %>

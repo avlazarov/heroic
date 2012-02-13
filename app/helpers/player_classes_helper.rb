@@ -1,0 +1,2 @@
+module PlayerClassesHelper
+end

@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+<% available = @inventory.items.size %>
+
+<p>You have <%= available %> items in your inventory<br />
+You are using <%= '%.2f' % (100 * available / Float(@inventory.capacity)) %>%(<%= available %>/<%= @inventory.capacity %>) of your inventory</p>
+<ul>
+  <% @items.each do |item| %>
+    <li><%= render item %></br></li>
+  <% end %>
+</ul>
+

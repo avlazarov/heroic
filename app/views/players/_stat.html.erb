@@ -1,0 +1,12 @@
+<p>Player stats</p>
+<ul>
+  <li>Potions: <%= @player.potions %>
+  <%= link_to('Use a potion', use_potion_player_path) if @player.can_use_potion? %></li>
+  <li>Class: <%= @player.player_class.name %></li>
+  <li>Level: <%= @player.level %></li>
+  <li>Experience: <%= @player.experience %></li>
+  <li>Life: <%= @player.life %>/<%= @player.total_life %></li>
+  <li>Attack: <%= @player.attack %></li>
+  <li>Defense: <%= @player.defense %></li>
+  <li>Experience Bonus: <%= @player.experience_bonus %>%</li>
+</ul>

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+<%= form_for(@account, :url => process_login_account_path) do |f| %>
+  <% if @account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@account.errors.count, "error") %> prohibited this account from being saved:</h2>
+
+      <ul>
+      <% @account.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :username %><br />
+    <%= f.text_field :username %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br />
+    <%= f.password_field :password %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Login' %><br />
+  </div>
+<% end %>
+<p>Don't have an account?</p>
+<%= link_to "Create new account", new_account_path %>

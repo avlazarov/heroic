@@ -1,0 +1,19 @@
+<h2>Available player classes</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Attack</th>
+    <th>Defense</th>
+    <th>Experience bonus</th>
+  </tr>
+
+<% @player_classes.each do |player_class| %>
+  <tr>
+    <td><%= player_class.name %></td>
+    <td><%= player_class.attack %></td>
+    <td><%= player_class.defense %></td>
+    <td><%= player_class.experience_bonus %>%</td>
+  </tr>
+<% end %>
+</table>
