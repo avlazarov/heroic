@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class Account < ActiveRecord::Base
   has_one :player, :dependent => :destroy
 
@@ -7,6 +9,15 @@ class Account < ActiveRecord::Base
                        :format => { :with => /\A[[:alpha:]][[:word:]]*\z/, :message => "should start with letter" }
 
   validates :password, :presence => true,
-                       :confirmation => true,
-                       :length => { :within => 6..30 }
+                       :confirmation => true
+  
+  validates :password, :length => { :within => 6..30 }, :if => :password_changed? # so when retrieved from database it will be valid
+
+  before_save :encrypt_password, :if => :password_changed?
+
+  private
+
+  def encrypt_password
+    self.password = Digest::MD5.hexdigest password
+  end
 end
