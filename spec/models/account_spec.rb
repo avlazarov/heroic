@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+require 'digest/md5'
 require 'spec_helper'
 
 describe Account do
@@ -20,4 +21,20 @@ describe Account do
   
   it { should allow_value('ultra_secret_password!').for(:password) }
   it { should_not allow_value('pass').for(:password) }
+
+  describe 'Password encryptions' do
+    let(:password) { 'ultrasecret' }
+
+    it 'Will encypt password on save' do
+      account = FactoryGirl.create :account, password: password
+      account.password.should == Digest::MD5.hexdigest(password)
+    end
+
+    it 'Will not re-encypt password if password has not been changed' do
+      account = FactoryGirl.create :account, password: password
+      account.username = 'ultra_user'
+      account.save
+      account.password.should == Digest::MD5.hexdigest(password)
+    end
+  end
 end
