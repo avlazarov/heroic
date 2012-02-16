@@ -62,4 +62,11 @@ class PlayersController < ApplicationController
       end
     end
   end
+
+  private
+
+  def load_player
+    load_account
+    @player = @account.player
+  end
 end
