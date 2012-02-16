@@ -1,23 +1,28 @@
 class AccountsController < ApplicationController
+  include AccountsHelper
+
   before_filter :require_user, :except => [:login, :process_login, :new, :create]
   before_filter :load_account, :except => [:login, :process_login, :new, :create]
   
   # GET /account/login
   def login
+    error, notice = flash[:error], flash[:notice]
     reset_session
+    flash[:error], flash[:notice] = error, notice
     @account = Account.new
   end
 
-  # POST /account/login
+  # POST /account/process_login
   def process_login
-    @account = Account.find_by_username_and_password params[:account][:username], params[:account][:password]
+    @account = Account.find_by_username_and_password params[:account][:username], encrypt(params[:account][:password])
 
     if @account
       reset_session
       session[:user_id] = @account.id
       redirect_to player_path, notice: 'Successfully logged in.'
     else
-      redirect_to login_account_path, notice: 'Wrong username/password.'
+      flash[:error] = 'Invalid username/password'
+      redirect_to login_account_path
     end
   end
 
@@ -34,7 +39,7 @@ class AccountsController < ApplicationController
   # GET /account/new
   def new
     @account = Account.new
-    @player  = Player.new # or @account.build_player ?
+    @player  = Player.new
   end
 
   # GET /account/edit
@@ -51,10 +56,10 @@ class AccountsController < ApplicationController
         redirect_to login_account_path, notice: 'Account was successfully created.'
       else
         @account.destroy
-        render action: "new"
+        render action: 'new'
       end
     else
-      render action: "new"
+      render action: 'new'
     end
   end
 
@@ -69,11 +74,12 @@ class AccountsController < ApplicationController
     if @account.update_attributes params[:account]
       redirect_to edit_account_path, notice: 'Account was successfully updated.'
     else
-      render action: "edit"
+      render action: 'edit'
     end
   end
 
   private
+
   def load_account
     @account = Account.find session[:user_id]
   end
