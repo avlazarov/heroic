@@ -39,7 +39,6 @@ describe ItemsController do
 
       context 'when item belongs to player' do  
         before do
-          puts "Item id:", item.destroy
           player.stub :items => [item]
         end
 
