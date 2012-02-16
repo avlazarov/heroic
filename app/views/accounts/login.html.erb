@@ -1,4 +1,5 @@
-<p id="notice"><%= notice %></p>
+<p id="error"> <%= flash[:error] %>
+<p id="notice"><%= flash[:notice] %></p>
 <%= form_for(@account, :url => process_login_account_path) do |f| %>
   <% if @account.errors.any? %>
     <div id="error_explanation">
@@ -11,7 +12,6 @@
       </ul>
     </div>
   <% end %>
-
   <div class="field">
     <%= f.label :username %><br />
     <%= f.text_field :username %>
