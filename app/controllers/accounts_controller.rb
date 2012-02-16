@@ -77,10 +77,4 @@ class AccountsController < ApplicationController
       render action: 'edit'
     end
   end
-
-  private
-
-  def load_account
-    @account = Account.find session[:user_id]
-  end
 end
