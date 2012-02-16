@@ -1,5 +1,5 @@
 class InventoriesController < ApplicationController
-  before_filter :require_user, :load_player, :load_inventory
+  before_filter :require_user, :load_inventory
 
   # GET /inventory
   def show
@@ -7,7 +7,9 @@ class InventoriesController < ApplicationController
   end
 
   private
+
   def load_inventory
-    @inventory = @player.inventory
+    load_account
+    @inventory = @account.player.inventory
   end
 end
