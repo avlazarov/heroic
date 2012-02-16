@@ -1,12 +1,16 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  # helper_method to be able to use it in view
+  # so can be used in views
   helper_method :logged_in?
 
   private
+
   def require_user
-    redirect_to login_account_path unless logged_in?
+    unless logged_in?
+      flash[:error] = 'Not logged in!'
+      redirect_to login_account_path
+    end
   end
 
   def logged_in?
