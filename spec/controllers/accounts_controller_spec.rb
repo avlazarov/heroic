@@ -35,7 +35,7 @@ describe AccountsController do
       post :process_login, :account => {:username => 'username', :password => 'password'}
     end
 
-    it 'sets session' do
+    it 'logs in account' do
       post :process_login, :account => {}
       account.should be_logged_in
     end
@@ -78,15 +78,22 @@ describe AccountsController do
       Account.stub :find => account
     end
 
-    it 'assigns account to @account' do
-      log_in account
-      get :show
-      assigns(:account).should == account
+    context 'when logged in' do
+      before do
+        log_in account
+      end
+
+      it 'assigns account to @account' do
+        get :show
+        assigns(:account).should == account
+      end
     end
 
-    it 'redirects to account login when not loged in' do
-      get :show
-      response.should deny_access
+    context 'when not logged in' do
+      it 'denies access' do
+        get :show
+        response.should deny_access
+      end
     end
   end
 
@@ -124,15 +131,22 @@ describe AccountsController do
       Account.stub :find => account
     end
 
-    it 'assigns account to @account' do
-      log_in account
-      get :edit
-      assigns(:account).should == account
-    end
+    context 'when logged in' do
+      before do
+        log_in account
+      end
 
-    it 'redirects to account login when not loged in' do
-      get :edit
-      response.should deny_access
+      it 'assigns account to @account' do
+        get :edit
+        assigns(:account).should == account
+      end
+    end
+    
+    context 'when not logged in' do
+      it 'redirects to account login when not loged in' do
+        get :edit
+        response.should deny_access
+      end
     end
   end
 
@@ -183,59 +197,65 @@ describe AccountsController do
 
   describe 'DELETE destroy' do
     let(:account)  { mock_model(Account, :destroy => true) }
+    context 'when logged in' do
+      before do
+        log_in account
+        Account.stub :find => account
+      end
 
-    before do
-      log_in account
-      Account.stub :find => account
+      it 'deletes the account' do
+        account.should_receive(:destroy)
+        delete :destroy
+      end
+
+      it 'redirects to account login' do
+        delete :destroy
+        response.should redirect_to(login_account_path)
+      end
     end
 
-    it 'should search for user session before ' do
-      Account.should_receive(:find)
-      delete :destroy
-    end
-
-    it 'deletes the account' do
-      account.should_receive(:destroy)
-      delete :destroy
-    end
-
-    it 'redirects to account login' do
-      delete :destroy
-      response.should redirect_to(login_account_path)
+    context 'when not logged in' do
+      it 'denies access' do
+        delete :destroy
+        response.should deny_access
+      end
     end
   end
 
   describe 'PUT update' do
     let(:account)  { mock_model(Account, :update_attributes => true) }
-    
-    before do
-      Account.stub :find => account
-      log_in account
-    end
 
-    it 'denies access when not logged in' do
-      log_out
-      put :update
-      response.should deny_access
-    end
-
-    context 'when successful' do
-      it 'updates account' do
-        account.should_receive(:update_attributes).with('attributes').and_return(true)
-        put :update, :account => 'attributes'
+    context 'when logged in' do
+      before do
+        Account.stub :find => account
+        log_in account
       end
 
-      it 'redirects to account edit' do
-        put :update
-        response.should redirect_to(edit_account_path)
+      context 'when successful' do
+        it 'updates account' do
+          account.should_receive(:update_attributes).with('attributes').and_return(true)
+          put :update, :account => 'attributes'
+        end
+
+        it 'redirects to account edit' do
+          put :update
+          response.should redirect_to(edit_account_path)
+        end
+      end
+
+      context 'when unsuccessful' do
+        it 'renders edit' do
+          account.stub :update_attributes => false
+          put :update
+          response.should render_template(:edit)
+        end
       end
     end
 
-    context 'when unsuccessful' do
-      it 'renders edit' do
-        account.stub :update_attributes => false
+    context 'when not logged in' do
+      it 'denies access' do
         put :update
-        response.should render_template(:edit)
+        response.should deny_access
       end
     end
   end
