@@ -1,10 +1,11 @@
 # encoding: UTF-8
 
-require 'digest/md5'
 require 'spec_helper'
 
 describe Account do
-  it { should have_one(:player) }
+  include AccountsHelper
+
+  it { should have_one(:player).dependent(:destroy) }
 
   it { should validate_presence_of(:username) }
   it { should validate_presence_of(:password) }
@@ -25,16 +26,19 @@ describe Account do
   describe 'Password encryptions' do
     let(:password) { 'ultrasecret' }
 
-    it 'Will encypt password on save' do
+    it 'encypts password on save' do
       account = FactoryGirl.create :account, password: password
-      account.password.should == Digest::MD5.hexdigest(password)
+      account.password.should == encrypt(password)
     end
 
-    it 'Will not re-encypt password if password has not been changed' do
+    it 'will not re-encypt password if password has not been changed' do
       account = FactoryGirl.create :account, password: password
-      account.username = 'ultra_user'
+
+      original_password, account.password = account.password, 'extreme_secret'
+      account.password = original_password
       account.save
-      account.password.should == Digest::MD5.hexdigest(password)
+
+      account.password.should == encrypt(password)
     end
   end
 end
