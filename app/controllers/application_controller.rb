@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     session[:user_id]
   end
 
-  def load_player
-    @player = Player.find_by_account_id session['user_id']
+  def load_account
+    @account = Account.find session[:user_id]
   end
 end
