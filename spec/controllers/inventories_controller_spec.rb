@@ -28,6 +28,11 @@ describe InventoriesController do
         get :show
         assigns(:items).should == items
       end
+
+      it 'loads items from inventory' do
+        inventory.should_receive(:items).and_return(items)
+        get :show
+      end
     end
     
     context 'when not logged in' do
