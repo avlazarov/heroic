@@ -8,7 +8,8 @@ class ItemsController < ApplicationController
       @item.destroy
       redirect_to inventory_path, notice: "Item '#{@item.name}' successfully removed!"
     else
-      redirect_to inventory_path, notice: "Invalid or someone else's item"
+      flash[:error] = "Invalid or someone else's item"
+      redirect_to inventory_path
     end
   end
 end
