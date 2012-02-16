@@ -1,6 +1,6 @@
-require 'digest/md5'
-
 class Account < ActiveRecord::Base
+  include AccountsHelper
+
   has_one :player, :dependent => :destroy
 
   validates :username, :presence => true,
@@ -18,6 +18,6 @@ class Account < ActiveRecord::Base
   private
 
   def encrypt_password
-    self.password = Digest::MD5.hexdigest password
+    self.password = encrypt password
   end
 end
