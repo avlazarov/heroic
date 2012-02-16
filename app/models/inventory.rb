@@ -8,10 +8,14 @@ class Inventory < ActiveRecord::Base
     APP_CONFIG['inventory_capacity']
   end
 
+  def full?
+    items.size == capacity
+  end
+
   def add_item(item)
     if not item.valid?
       raise 'Invalid item specified'
-    elsif items.size + 1 <= capacity
+    elsif not full?
       item.inventory = self # do not save, only build! or...?
     else
       raise 'No more room in the inventory'
