@@ -27,7 +27,7 @@ class Item < ActiveRecord::Base
   end
 
   def belongs_to?(player)
-    player and player.inventory == inventory # TODO check inventory ids
+    player and player.items.include?(self)
   end
 
   private
