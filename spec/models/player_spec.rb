@@ -26,14 +26,9 @@ describe Player do
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:player_class).with_message('is not specified or does not exist') }
 
-  it 'after created, creates inventrory' do
-    player = FactoryGirl.create :player
-    player.inventory.should be_present
-  end
-
   describe '#use_potion' do
     context 'when dead' do
-      let(:player) { FactoryGirl.create :player, current_life_percent: Player::MIN_LIFE_PERCENT }
+      let(:player) { FactoryGirl.create :dead_player }
 
       it 'cannot use potion' do
         player.can_use_potion?.should be_false
@@ -78,7 +73,7 @@ describe Player do
 
   describe '#resurrect' do
     context 'when alive' do
-      let(:player) { FactoryGirl.create :player, current_life_percent: Player::MAX_LIFE_PERCENT }
+      let(:player) { FactoryGirl.create :player }
 
       it 'cannot be ressurected' do
         player.resurrect.should be_false
@@ -86,9 +81,7 @@ describe Player do
     end
 
     context 'when dead' do
-      let(:player) { FactoryGirl.create :player,
-                     current_life_percent: Player::MIN_LIFE_PERCENT,
-                     experience: 10000 }
+      let(:player) { FactoryGirl.create :dead_player, experience: 10000 }
 
       it "restores current life percent to #{Player::MAX_LIFE_PERCENT}%" do
         player.resurrect
@@ -157,5 +150,46 @@ describe Player do
       player.inventory.should_receive(:add_item)
       player.add_item double
     end
-  end 
+  end
+  
+  describe '#decrease_life_with' do
+    let(:player) { FactoryGirl.create :player, current_life_percent: 50 }
+
+    before do
+      player.stub :items => [FactoryGirl.build(:item, life: 25)] 
+    end
+
+    it 'descreases life with specified amount' do
+      life_before = player.current_life
+      player.decrease_life_with 10
+      player.current_life.should == life_before - 10 
+    end
+
+    it 'will not result in invalid player life' do
+      player.decrease_life_with 1000
+      player.should be_valid
+    end
+
+    it 'will not update life if amount param is negative' do
+      life_percent_before = player.current_life_percent
+      player.decrease_life_with -10
+      player.current_life_percent.should == life_percent_before
+    end
+  end
+
+  describe '#receive_experience' do
+    let(:player) { FactoryGirl.create :player, experience: 200 }
+
+    it 'increases experience with specified amount' do
+      expericence_before = player.experience
+      player.receive_experience 100
+      player.experience.should == expericence_before + 100 * (1 + player.experience_bonus)
+    end
+
+    it 'does not change experience on negative amount param' do
+      experience_before = player.experience
+      player.receive_experience -10
+      player.experience.should == experience_before # dont use _changed?
+    end
+  end
 end
