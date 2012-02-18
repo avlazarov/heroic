@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'spec_helper'
 
 describe Monster do
@@ -7,6 +9,16 @@ describe Monster do
   it { should validate_numericality_of(:defense) }
   it { should validate_numericality_of(:life) }
   it { should validate_numericality_of(:experience_given) }
+
+  it { should validate_format_of(:name).not_with('1Shost').with_message('only letters allowed') }
+  it { should validate_format_of(:name).with('Viper').with_message('only letters allowed') }
+
+  it { should_not allow_value('1Ghost').for(:name) }
+  it { should_not allow_value('Viper1').for(:name) }
+  it { should_not allow_value('').for(:name) }
+  it { should_not allow_value('Vile Witch').for(:name) }
+  it { should allow_value('Vampire').for(:name) }
+  it { should allow_value('Вампир').for(:name) }
 
   describe '#find_by_level_between' do
     it 'searches only for monsters between specified levels' do
