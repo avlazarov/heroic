@@ -32,7 +32,7 @@ describe BattleController do
         end
       end
 
-      context 'when not dead' do
+      context 'when alive' do
         let(:monster) { Factory.stub :monster }
         let(:item) { [Factory.stub(:item)] }
 
@@ -62,8 +62,8 @@ describe BattleController do
           get :start
         end
 
-        it 'will change current_live_percent' do
-          player.should_receive(:current_life_percent=)
+        it 'will change current live percent' do
+          player.should_receive(:decrease_life_with)
           get :start
         end
 
@@ -81,8 +81,8 @@ describe BattleController do
           get :start
         end
 
-        it 'will change experience' do
-          player.should_receive(:experience=)
+        it 'will receive experience with monster experience' do
+          player.should_receive(:receive_experience).with(monster.experience_given)
           get :start
         end
 
@@ -90,6 +90,16 @@ describe BattleController do
           monster.stub :experience_given => 1000 # if not stubbed returns nil
           monster.should_receive(:experience_given)
           get :start
+        end
+
+        it 'assigns player to @player' do
+          get :start
+          assigns(:player).should == player
+        end
+
+        it 'assigns monster to @monster' do
+          get :start
+          assigns(:monster).should == monster
         end
       end
     end
