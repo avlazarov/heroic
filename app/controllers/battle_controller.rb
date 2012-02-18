@@ -3,46 +3,44 @@ class BattleController < ApplicationController
 
   # GET /battle/start
   def start
-    player = @account.player
-    if player.dead?
+    @player = @account.player
+    if @player.dead?
       flash[:error] = 'Your player is dead, cannot go in battle!'
       redirect_to player_path
     else
-      monster = Monster.random_by_level_between player.level - 5, player.level + 2
-      monster ||= Monster.default(player.level)
+      @monster = Monster.random_by_level_between @player.level - 5, @player.level + 2
+      @monster ||= Monster.default(@player.level)
 
-      life_lost = outcome player, monster
+      @life_lost = [outcome(@player, @monster), @player.current_life].min
 
-      @life_lost = life_lost
+      # update life
+      @player.decrease_life_with @life_lost 
+      @player.save
 
-      player.current_life_percent -= 100.0 * life_lost / player.total_life
-      player.save
-
-      if not player.dead?
+      if not @player.dead?
         @items_received = 0
-
-        @experience_recieved = monster.experience_given
         @potions_received = ([0] * 10 + [1] * 2 +  [2]).sample
 
-        items = items_dropped monster.level
-
+        items = items_dropped @monster.level
+        
+        # receive items
         begin
           items.each do |item|
-            player.add_item item
+            @player.add_item item
             item.save
-            player.reload
+            @player.reload
             @items_received += 1
           end
         rescue Exception => ex
           flash[:error] = ex.message
         end
 
-        player.potions    += @potions_received
-        player.experience += @experience_recieved
+        # update potions and experience 
+        @player.potions += @potions_received
+        @player.receive_experience @monster.experience_given
       end
 
-      player.save
-      @player = player
+      @player.save
     end
   end
 
@@ -62,7 +60,7 @@ class BattleController < ApplicationController
     elsif player.current_life > monster.life
       player.current_life - monster.life
     else # dies :(
-      player.current_life 
+      player.current_life
     end
   end
 end
