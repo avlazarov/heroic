@@ -1,10 +1,11 @@
 <p id="error"><%= flash[:error] %></p>
 <p id="notice"><%= notice %></p>
 <% if @player.dead? %>
-  <p>You have died :(</p>
+  <p>You been killed by <%= @monster.name %> :(</p>
 <% else %>
+  <p>You have defeated <%= @monster.name %></p>
   <p>You have recieved <%= pluralize @items_received, 'item' %></p>
-  <p>You have recieved <%= @experience_recieved %> experience</p>
-  <p>You have lost <%= @life_lost %> life </p>
+  <p>You have recieved <%= @monster.experience_given %> experience</p>
+  <p>You have lost <%= "%.2f" % @life_lost %> life </p>
   <p>You have recieved <%= pluralize @potions_received, 'potion' %></p>
 <% end %>
