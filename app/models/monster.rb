@@ -1,5 +1,7 @@
 class Monster < ActiveRecord::Base
-  validates_presence_of     :name
+  validates :name, :presence => true,
+                   :format => { :with => /\A[[:alpha:]]+\z/, 
+                                :message => 'only letters allowed' }
   validates_numericality_of :level
   validates_numericality_of :attack
   validates_numericality_of :defense
@@ -12,7 +14,7 @@ class Monster < ActiveRecord::Base
   end
 
   def self.default(level)
-    Monster.new name: 'Default monster', attack: level, defense: level,
+    Monster.new name: 'Unnamed', attack: level, defense: level,
                 life: level * 2, experience_given: level * 100, level: level 
   end
 end
