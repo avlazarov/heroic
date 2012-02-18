@@ -7,7 +7,9 @@ class Player < ActiveRecord::Base
   belongs_to :account, :dependent => :destroy # destroy account on player destroy
   belongs_to :player_class
   
-  validates :name, :presence => true, :format => { :with => /\A[[:alpha:]]+\z/, :message => 'only letters allowed' }
+  validates :name, :presence => true,
+                   :format => { :with => /\A[[:alpha:]]+\z/,
+                                :message => 'only letters allowed' }
 
   # check if the player_class really exists
   validates_presence_of :player_class, :message => 'is not specified or does not exist'
@@ -68,11 +70,24 @@ class Player < ActiveRecord::Base
   end
 
   def dead?
-    current_life_percent == MIN_LIFE_PERCENT
+    current_life_percent == 0
   end
 
   def add_item(item_params)
     inventory.add_item item_params
+  end
+
+  def decrease_life_with(amount)
+    if amount > 0
+      new_life_percent = self.current_life_percent - 100.0 * amount / total_life
+      self.current_life_percent = [new_life_percent.round, MIN_LIFE_PERCENT].max
+    end
+  end
+
+  def receive_experience(amount)
+    if amount > 0
+      self.experience += (1 + self.experience_bonus) * amount
+    end
   end
 
   private
