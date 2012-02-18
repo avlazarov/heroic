@@ -11,11 +11,16 @@ FactoryGirl.define do
   factory :inventory do
   end
 
-  factory :player do
-    sequence(:name) { |n| "Player_#{n}" }
-  end
-
   factory :player_class do
     sequence(:name) { |n| "PlayerClass_#{n}" }
+  end
+
+  factory :player do
+    name 'Player'
+    player_class
+  end
+
+  factory :monster do
+    name 'Monster'
   end
 end

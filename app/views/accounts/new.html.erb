@@ -1,5 +1,4 @@
 <h1>New account</h1>
-<%= notice %>
 <%= form_for @account, :url => {:action => :create} do |f| %>
   <% if @account.errors.any? %>
     <div id="error_explanation">

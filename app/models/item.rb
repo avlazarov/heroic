@@ -8,7 +8,12 @@ class Item < ActiveRecord::Base
   validates_numericality_of :life
   validates_numericality_of :experience_bonus
 
-  # not using inventory object, because Inventory.new may be passed and item.valid? will return true
+  # define constants used for generating item names
+  %w[prefixes suffixes types].each do |part_of_name|
+    values = Rails.application.config.items[part_of_name]
+    const_set(part_of_name.upcase, values.split(',').map(&:strip).map(&:capitalize))
+  end
+
   def self.generate(item_level)
     random = Random.new
     params = {}
@@ -17,7 +22,7 @@ class Item < ActiveRecord::Base
     upper = item_level + 10
     range = lower..upper
     
-    params[:name]    = Item.generate_name + item_level.to_s # TODO item name config
+    params[:name]    = Item.generate_name
     params[:attack]  = random.rand(range) / random.rand(5..7)
     params[:defense] = random.rand(range) / random.rand(5..7)
     params[:life]    = random.rand(range) / 10
@@ -33,6 +38,6 @@ class Item < ActiveRecord::Base
   private
 
   def self.generate_name
-    'item_of_level_'
+    "#{PREFIXES.sample} #{TYPES.sample} of #{SUFFIXES.sample}"
   end
 end

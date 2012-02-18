@@ -11,9 +11,14 @@ Heroic::Application.routes.draw do
 
   resource :player do
     collection do
-      get 'battle'
       get 'use_potion'
       get 'resurrect'
+    end
+  end
+
+  resource :battle, :controller => :battle do
+    collection do
+      get 'start'
     end
   end
 

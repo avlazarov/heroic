@@ -32,8 +32,7 @@ describe ItemsController do
 
         it 'redirects to inventory with error' do
           delete :destroy, :id => item.id
-          flash[:error].should_not be_nil
-          response.should redirect_to(inventory_path)
+          response.should redirect_with_error_to(inventory_path)
         end
       end
 
@@ -49,8 +48,7 @@ describe ItemsController do
 
         it 'redirects to inventory without error' do
           delete :destroy, :id => item.id
-          flash[:error].should be_nil
-          response.should redirect_to(inventory_path)
+          response.should redirect_without_error_to(inventory_path)
         end
       end
     end

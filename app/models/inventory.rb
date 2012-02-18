@@ -5,7 +5,7 @@ class Inventory < ActiveRecord::Base
   after_create :create_starting_items
 
   def capacity
-    APP_CONFIG['inventory_capacity']
+    Rails.application.config.inventory_capacity
   end
 
   def full?

@@ -5,7 +5,7 @@
   <li>Class: <%= @player.player_class.name %></li>
   <li>Level: <%= @player.level %></li>
   <li>Experience: <%= @player.experience %></li>
-  <li>Life: <%= @player.life %>/<%= @player.total_life %></li>
+  <li>Life: <%= "%.2f"% @player.current_life %>/<%= @player.total_life %></li>
   <li>Attack: <%= @player.attack %></li>
   <li>Defense: <%= @player.defense %></li>
   <li>Experience Bonus: <%= @player.experience_bonus %>%</li>

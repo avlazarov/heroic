@@ -48,5 +48,17 @@ module Heroic
     config.generators do |g|
       g.test_framework :rspec
     end
+
+    conf = YAML.load_file("#{::Rails.root}/config/config.yml")[::Rails.env]
+
+    # custom config
+    config.items = {'prefixes' => conf['item_prefixes'], 
+                    'suffixes'  => conf['item_suffixes'],
+                    'types'     => conf['item_types']}
+
+    config.inventory_capacity      = conf['inventory_capacity']
+    config.experience_per_level    = conf['experience_per_level']
+    config.experience_percent_lost = conf['experience_percent_lost']
+    config.potion_heal_percent     = conf['potion_heal_percent']
   end
 end

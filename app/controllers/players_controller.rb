@@ -9,6 +9,16 @@ class PlayersController < ApplicationController
   def edit
   end
 
+  
+  # PUT /players/1
+  def update
+    if @player.update_attributes params[:player]
+      redirect_to player_path, notice: 'Player information successfully updated.'
+    else
+      render action: 'edit'
+    end
+  end
+
   # GET /player/resurrect
   def resurrect
     if @player.dead?
@@ -16,51 +26,22 @@ class PlayersController < ApplicationController
       @player.save!
       redirect_to player_path, notice: 'Resurrected!'
     else
-      redirect_to player_path, notice: 'Still alive, no ressurection needed!'
+      flash[:error] = 'Still alive, no resurrection needed!'
+      redirect_to player_path
     end
   end
 
-  # GET /player/battle
-  def battle
-    if @player.dead?
-      redirect_to player_path, notice: 'Your player is dead, cannot go in battle!'
-    end
-
-    @items_received = 0
-    begin
-      Random.new.rand(0..2).times do
-        @player.add_item Item.generate(10) # TODO FIX
-        @items_received += 1
-      end
-    rescue Exception => ex
-      flash[:error] = ex.message
-    end
-    
-    @experience_recieved = 0
-    @potions_received = ([0] * 10 + [1] * 2 +  [2]).sample
-
-    @player.potions += @potions_received
-    @player.inventory.save
-    @player.save
-  end
 
   # GET /player/use_potion
   def use_potion
-    @player.use_potion
-    @player.save
-
-    redirect_to player_path
-  end
-
-  # PUT /players/1
-  def update
-    respond_to do |format|
-      if @player.update_attributes params[:player]
-        format.html { redirect_to player_path, notice: 'Player information successfully updated.' }
-      else
-        format.html { render action: "edit" }
-      end
-    end
+    if @player.can_use_potion?
+      @player.use_potion
+      @player.save
+      redirect_to player_path, notice: 'Potion used. You have one potion less'
+    else
+      flash[:error] = "You can't use potion!"
+      redirect_to player_path
+    end 
   end
 
   private
