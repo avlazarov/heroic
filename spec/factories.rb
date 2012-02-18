@@ -12,12 +12,16 @@ FactoryGirl.define do
   end
 
   factory :player_class do
-    sequence(:name) { |n| "PlayerClass_#{n}" }
+    name 'PlayerClass'
   end
 
   factory :player do
     name 'Player'
     player_class
+  end
+
+  factory :dead_player, :parent => :player do
+    current_life_percent Player::MIN_LIFE_PERCENT
   end
 
   factory :monster do
