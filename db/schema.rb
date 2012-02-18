@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120218075947) do
+ActiveRecord::Schema.define(:version => 20120218120900) do
 
   create_table "accounts", :force => true do |t|
     t.string   "username"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(:version => 20120218075947) do
     t.datetime "updated_at"
     t.integer  "player_class_id"
     t.integer  "potions",              :default => 0
-    t.decimal  "current_life_percent", :default => 100.0
+    t.integer  "current_life_percent", :default => 100
   end
 
 end
