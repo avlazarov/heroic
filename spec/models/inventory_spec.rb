@@ -25,6 +25,6 @@ describe Inventory do
     item.save
     inventory.reload
     inventory.items.should include(item)
-    inventory.items.should have(2).item
+    inventory.items.should have(2).item # including initial
   end
 end

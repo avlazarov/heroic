@@ -7,6 +7,7 @@ class PlayersController < ApplicationController
 
   # GET /player/edit
   def edit
+    redirect_to player_path
   end
 
   

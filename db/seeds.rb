@@ -1,4 +1,3 @@
-
 PlayerClass.destroy_all
 PlayerClass.create(:name => 'Barbarian', :attack => 20, :defense => 15, :experience_bonus => 0)
 PlayerClass.create(:name => 'Paladin',   :attack => 15, :defense => 20, :experience_bonus => 2)
