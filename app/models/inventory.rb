@@ -4,6 +4,10 @@ class Inventory < ActiveRecord::Base
 
   after_create :create_starting_items
 
+  def available_space
+    capacity - items.size
+  end
+
   def capacity
     Rails.application.config.inventory_capacity
   end
