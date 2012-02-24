@@ -22,7 +22,8 @@ class BattleController < ApplicationController
         @potions_received = ([0] * 10 + [1] * 2 +  [2]).sample
 
         items = items_dropped @monster.level
-        
+        items = items.take @player.inventory.available_space
+
         # receive items
         begin
           items.each do |item|
