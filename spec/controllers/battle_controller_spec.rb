@@ -13,7 +13,7 @@ describe BattleController do
 
     context 'when logged in' do
       let(:account) { mock_model(Account) }
-      let(:player) { Factory.stub :player } 
+      let(:player) { Factory.stub :player }
 
       before do
         Account.stub :find => account
@@ -34,6 +34,7 @@ describe BattleController do
 
       context 'when alive' do
         let(:monster) { Factory.stub :monster }
+        let(:inventory) { Factory.stub :inventory } 
         let(:item) { [Factory.stub(:item)] }
 
         before do
@@ -41,8 +42,7 @@ describe BattleController do
           player.stub :dead? => false
           player.stub :save # no database save for stubbed models
           player.stub :reload
-          player.stub :items => []
-          player.stub :add_item
+	        player.stub :inventory => inventory
 
           Monster.stub :default => monster
           Item.stub :generate => item
