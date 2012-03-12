@@ -1,0 +1,57 @@
+html,
+body {
+   margin:0;
+   padding:0;
+   background-color: lightgrey;
+}
+
+#body {
+   padding:10px;
+   padding-bottom:30px;
+}
+
+#container {
+  margin-left: 400px;
+  min-height: 100%;
+  position: relative; }
+
+#header {
+    width: 60%;
+    min-height: 100px;
+    text-align: right;}
+
+#menu {
+  float: left;
+  width: 20%;
+  min-width: 20%;
+}
+
+#menu li {
+  list-style-image: url('/arrow.png');
+}
+
+#main {
+  float: left;
+  width: 40%;
+  min-width: 40%;
+}
+
+#statistics {
+  float: left;
+  width: 30%;
+  min-width: 20%;
+}
+
+#footer {
+  position:relative;
+  bottom:0;
+  width:100%;
+  height:30px;
+  margin-left: 20%;
+  padding-top: 50px;
+  clear: both;
+}
+ 
+p.required-fields-notice {
+  color: red;
+}
